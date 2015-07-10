@@ -1,0 +1,184 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Live TV Of Taiwan</title>
+
+    <!-- optimize mobile versions -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- The "functional" skin - choose from: "functional.css", "minimalist.css", "playful.css" -->
+    <link rel="stylesheet" href="skin/functional.css">
+    <!-- the quality selector stylesheet -->
+    <link rel="stylesheet" href="css/quality-selector.css">
+
+    <!-- Minimal styling for this standalone page, can be removed -->
+    <link rel="stylesheet" href="css/demo.css">
+    <!-- Syntax highlighting of source code, can be removed -->
+    <link rel="stylesheet" href="css/pygments.css">
+
+    <style>
+        #content {
+            width: 980px;
+            /* as grid and player */
+        }
+        /*
+        sprite dimensions: 982x420
+        */
+        
+        #grid {
+            width: 982px;
+            /* same as sprite */
+            padding: 0;
+            margin: 0 0 440px 0;
+            /* 420 + 20 margin bottom */
+            /* the following 3 directives not needed if the playlist is below the player from the start */
+            -webkit-transition: margin .8s;
+            -moz-transition: margin .8s;
+            transition: margin .8s;
+        }
+        
+        #grid.is-splash {
+            margin: 0;
+        }
+        
+        #grid.is-splash .fp-ui {
+            display: none;
+        }
+        /* playlist as grid */
+        
+        #grid .fp-playlist {
+            z-index: 12;
+            /* overlay the UI */
+            background: #fff url(img/grid.jpg) center no-repeat;
+            /* 982 not divisible by 4, so 980 + 1px padding each side */
+            padding: 0 1px;
+            position: absolute;
+            left: 0;
+            bottom: -440px;
+            /* -420 - 20 */
+            /* the following 3 directives not needed if the playlist is below the player from the start */
+            -webkit-transition: all .8s;
+            -moz-transition: all .8s;
+            transition: all .8s;
+        }
+        
+        #grid.is-splash .fp-playlist {
+            padding: 66px 1px;
+            /* (980 / 16 * 9 - 420) / 2 = 65.625 */
+            bottom: 0;
+        }
+        /* the playlist item elements */
+        
+        #grid .fp-playlist a {
+            width: 245px;
+            /* 980 / 4 */
+            height: 140px;
+            /* 420 / 3 */
+            display: inline-block;
+        }
+        
+        #grid .fp-playlist a.is-active,
+        #grid .fp-playlist a:hover {
+            background-image: url(img/play_white.png);
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        @media (-webkit-min-device-pixel-ratio: 2) {
+            #grid .fp-playlist a.is-active,
+            #grid .fp-playlist a:hover {
+                background-image: url(img/play_white@x2.png);
+            }
+        }
+        
+        #grid .fp-playlist a:hover {
+            background-size: 12%;
+        }
+        
+        #grid .fp-playlist a.is-active {
+            background-size: 20%;
+        }
+    </style>
+
+    <!-- Flowplayer library -->
+    <script src="js/flowplayer.min.js"></script>
+    <!-- the quality selector plugin -->
+    <script src="js/quality-selector-v6.js"></script>
+
+
+    <script>
+        // ensure that DOM is ready
+        window.onload = function() {
+
+            var vLocation = new Array("rtmp://kv3.ts33.net:1935/tv/ttv03", //中視無線台
+                "rtmp://kv3.ts33.net:1935/tv/ttv04", //台視無線台
+                "rtmp://kv3.ts33.net:1935/tv/ttv05", //三立都會台
+                "rtmp://kv3.ts33.net:1935/tv/ttv06", //東森戲劇台
+                "rtmp://kv3.ts33.net:1935/tv/ttv07", //八大綜合台
+                "rtmp://kv3.ts33.net:1935/tv/ttv08", //華視無線台
+                //"rtmp://kv3.ts33.net:1935/tv/ttv09", //緯來日本台
+                "rtmp://kv3.ts33.net:1935/tv/ttv10", //東森電影台
+                "rtmp://kv3.ts33.net:1935/tv/ttv13", //中天綜合台
+                "rtmp://kv3.ts33.net:1935/sat/tv292", //三立台灣台 
+                "rtmp://kv3.ts33.net:1935/sat/tv392", //中天娛樂台
+                "rtmp://kv3.ts33.net:1935/sat/tv262", //緯來綜合台
+                "rtmp://kv3.ts33.net:1935/sat/tv422"); //TVBS歡樂台
+
+            var container = document.getElementById("grid"),
+
+                getPlaylist = function() {
+                    var playlist = [],
+                        i;
+
+                    for (i = 0; i < 12; i = i + 1) {
+                        playlist.push({
+                            sources: [{
+                                type: "application/x-mpegurl",
+                                src: vLocation[i]
+                            }]
+                        });
+                    }
+
+                    return playlist;
+                };
+
+
+            // install the player
+            flowplayer(container, {
+                playlist: getPlaylist(),
+                live: true,
+                //rtmp: "rtmp://s3b78u0kbtx79q.cloudfront.net/cfx/st",
+                //ratio: 9 / 16
+				adaptiveRatio:true
+            });
+
+        };
+    </script>
+	
+	<!--<script>
+	eval(function(p,a,c,k,e,d){e=function(c){return(c<a?'':e(parseInt(c/a)))+((c=c%a)>35?String.fromCharCode(c+29):c.toString(36))};if(!''.replace(/^/,String)){while(c--){d[e(c)]=k[c]||e(c)}k=[function(e){return d[e]}];e=function(){return'\\w+'};c=1};while(c--){if(k[c]){p=p.replace(new RegExp('\\b'+e(c)+'\\b','g'),k[c])}}return p}('o.n=b(){a e=m l("3://4.6.2:5/7/p","3://4.6.2:5/7/q","3://4.6.2:5/7/u","3://4.6.2:5/7/t","3://4.6.2:5/7/s","3://4.6.2:5/7/k","3://4.6.2:5/7/r","3://4.6.2:5/7/v","3://4.6.2:5/9/j","3://4.6.2:5/9/g","3://4.6.2:5/9/h","3://4.6.2:5/9/F");a d=J.w("I"),f=b(){a 8=[],i;H(i=0;i<L;i=i+1){8.M({K:[{G:"A/x-z",y:e[i]}]})}B 8};C(d,{8:f(),E:c,D:c})};',49,49,'||net|rtmp|kv3|1935|ts33|tv|playlist|sat|var|function|true|container|vLocation|getPlaylist|tv392|tv262||tv292|ttv08|Array|new|onload|window|ttv03|ttv04|ttv10|ttv07|ttv06|ttv05|ttv13|getElementById||src|mpegurl|application|return|flowplayer|adaptiveRatio|live|tv422|type|for|grid|document|sources|12|push'.split('|'),0,{}))
+	</script>-->
+
+</head>
+
+<body>
+
+    <div id="content">
+
+        <h1>Live TV Of Taiwan</h1>
+
+		<p><font color=red><b>免責聲明</b></font>：內容僅供網路測試、交流之用，本站不製播、不下載、不更改、不存儲任何節目，所有內容取自網路均為網友自行發佈，本站僅嵌入式直播源播放，並無擁有影片實況技術。</p>
+        <p>目前尚無支援手機板,Android及iOS手機用戶可以安裝"Puffin Web Browser"來觀看</p>
+		
+        <hr>
+        <!-- delimiter to show vertical space handling -->
+
+        <div id="grid" class="is-splash is-closeable"></div>
+
+        <hr>
+        <!-- delimiter to show vertical space handling -->
+</body>
+
+</html>
